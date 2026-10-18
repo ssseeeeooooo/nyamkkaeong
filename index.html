@@ -1,0 +1,222 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#171923">
+<title>Nyam & Nech</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#171923;font-family:-apple-system,BlinkMacSystemFont,sans-serif;color:#20212a}
+button,input,textarea{font:inherit}
+button{cursor:pointer}
+.phone{max-width:430px;min-height:100dvh;margin:auto;background:#f4f4f8;overflow:hidden}
+.status{height:43px;padding:14px 25px 5px;display:flex;justify-content:space-between;font-size:13px;font-weight:700}
+.view{min-height:calc(100dvh - 43px);padding:18px}
+.hide{display:none!important}
+.lock{background:linear-gradient(155deg,#858b9a,#303543 48%,#151722);color:white;text-align:center;padding:55px 20px 25px;min-height:calc(100dvh - 43px)}
+.date{font-size:15px}
+.clock{font-size:76px;font-weight:250;letter-spacing:-4px;margin:12px 0 35px}
+.dots{font-size:24px;letter-spacing:9px;margin:25px 0}
+.keys{display:grid;grid-template-columns:repeat(3,68px);justify-content:center;gap:12px}
+.key{height:64px;border:0;border-radius:50%;background:#ffffff24;color:white;font-size:24px}
+.wall{padding:20px;border-radius:22px;background:linear-gradient(140deg,#b6bdca,#555f75,#272b3b);color:white}
+.wall .big{font-size:38px;margin-top:8px}
+.apps{display:grid;grid-template-columns:repeat(3,1fr);gap:25px 8px;padding:27px 0}
+.app{border:0;background:none;display:flex;flex-direction:column;align-items:center;gap:7px;color:#252631;font-size:12px}
+.ico{height:58px;width:58px;border-radius:17px;display:grid;place-items:center;font-size:27px;box-shadow:0 3px 9px #0001}
+.dock{display:flex;justify-content:space-around;background:#ffffffb8;border-radius:23px;padding:12px 3px}
+.dock .app{flex:1}
+h1{font-size:28px;margin:12px 0 22px}
+h2{font-size:21px;margin:12px 0}
+.back{border:0;background:none;color:#3478f6;padding:6px 0;font-size:16px}
+.card{background:white;border-radius:15px;padding:14px;margin:10px 0}
+button.blue{background:#3478f6;color:white;border:0;border-radius:12px;padding:11px 14px}
+input,textarea{width:100%;padding:12px;border:1px solid #ddd;border-radius:11px;background:white;color:#222}
+textarea{min-height:120px;resize:vertical}
+.chatlog{height:49dvh;overflow:auto;background:#e9e9ef;border-radius:14px;padding:10px}
+.bubble{max-width:84%;width:fit-content;padding:10px 13px;border-radius:17px;margin:9px 0;white-space:pre-wrap;overflow-wrap:anywhere}
+.mine{background:#a9e879;margin-left:auto}
+.theirs{background:white}
+.line{display:flex;gap:7px;align-items:center;margin-top:9px}
+.line input{min-width:0}
+.small{font-size:12px;color:#777}
+.photoGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.photoGrid img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:8px}
+</style>
+</head>
+<body>
+<div class="phone">
+<div class="status"><span id="statusTime">9:41</span><span>●●●　Wi-Fi　▰</span></div>
+
+<section id="lock" class="lock">
+  <div id="date" class="date"></div>
+  <div id="clock" class="clock">9:41</div>
+  <div>암호를 입력하세요</div>
+  <div id="dots" class="dots">○ ○ ○ ○</div>
+  <div class="keys">
+    <button class="key" onclick="digit(1)">1</button><button class="key" onclick="digit(2)">2</button><button class="key" onclick="digit(3)">3</button>
+    <button class="key" onclick="digit(4)">4</button><button class="key" onclick="digit(5)">5</button><button class="key" onclick="digit(6)">6</button>
+    <button class="key" onclick="digit(7)">7</button><button class="key" onclick="digit(8)">8</button><button class="key" onclick="digit(9)">9</button>
+    <span></span><button class="key" onclick="digit(0)">0</button><button class="key" onclick="erase()">⌫</button>
+  </div>
+  <p class="small" style="color:white;margin-top:25px">테스트 암호: 1234</p>
+  <p id="error"></p>
+</section>
+
+<section id="home" class="view hide">
+  <div class="wall"><div id="homeDate">Nyam & Nech</div><div class="big" id="homeClock">9:41</div><div class="small" style="color:white">a little world of our own</div></div>
+  <div class="apps">
+    <button class="app" onclick="openApp('messages')"><span class="ico" style="background:#46c86b">💬</span>메시지</button>
+    <button class="app" onclick="openApp('kakao')"><span class="ico" style="background:#fee500">🗨️</span>카카오톡</button>
+    <button class="app" onclick="openApp('phone')"><span class="ico" style="background:#46c86b">📞</span>전화</button>
+    <button class="app" onclick="openApp('contacts')"><span class="ico" style="background:#a6c3ff">👤</span>연락처</button>
+    <button class="app" onclick="openApp('notes')"><span class="ico" style="background:#ffe37a">📝</span>메모</button>
+    <button class="app" onclick="openApp('photos')"><span class="ico" style="background:white">🌄</span>사진</button>
+  </div>
+  <div class="dock">
+    <button class="app" onclick="openApp('phone')"><span class="ico" style="background:#46c86b">📞</span></button>
+    <button class="app" onclick="openApp('messages')"><span class="ico" style="background:#46c86b">💬</span></button>
+    <button class="app" onclick="openApp('photos')"><span class="ico" style="background:white">🌄</span></button>
+  </div>
+</section>
+
+<section id="messages" class="view hide">
+  <button class="back" onclick="goHome()">‹ 홈</button><h1>메시지</h1>
+  <div class="card"><b>넺</b><p id="smsPreview">오늘은 잘 지냈어요?</p><button class="blue" onclick="openChat('messages')">대화 보기</button></div>
+</section>
+
+<section id="kakao" class="view hide">
+  <button class="back" onclick="goHome()">‹ 홈</button><h1>카카오톡</h1>
+  <div class="card"><b>냠</b><p id="kakaoPreview">언니, 아직 안 자요?</p><button class="blue" onclick="openChat('kakao')">채팅방 열기</button></div>
+</section>
+
+<section id="chat" class="view hide">
+  <button class="back" onclick="openApp(chatType)">‹ 대화 목록</button>
+  <h2 id="chatTitle">넺</h2><div class="chatlog" id="chatlog"></div>
+  <div class="line"><input id="chatInput" placeholder="메시지 입력" enterkeyhint="send"><button class="blue" onclick="sendMessage()">전송</button></div>
+</section>
+
+<section id="phone" class="view hide">
+  <button class="back" onclick="goHome()">‹ 홈</button><h1>전화</h1>
+  <div class="card"><h2>최근 통화</h2><div id="calls"></div></div>
+  <div class="card"><input id="dial" placeholder="전화번호 입력" inputmode="tel"><button class="blue" onclick="addCall()" style="margin-top:10px">기록 추가</button><p class="small">가상 통화 기록이며 실제 전화는 연결되지 않아.</p></div>
+</section>
+
+<section id="contacts" class="view hide">
+  <button class="back" onclick="goHome()">‹ 홈</button><h1>연락처</h1><div id="contactList"></div>
+  <div class="card"><h2>새 연락처</h2><input id="newName" placeholder="이름"><input id="newNumber" placeholder="전화번호" style="margin-top:8px"><button class="blue" onclick="addContact()" style="margin-top:10px">저장</button></div>
+</section>
+
+<section id="notes" class="view hide">
+  <button class="back" onclick="goHome()">‹ 홈</button><h1>메모</h1>
+  <input id="noteTitle" placeholder="제목"><textarea id="noteBody" placeholder="기억하고 싶은 문장을 적어 봐." style="margin-top:8px"></textarea>
+  <button class="blue" onclick="saveNote()" style="margin-top:8px">메모 저장</button><div id="savedNotes"></div>
+</section>
+
+<section id="photos" class="view hide">
+  <button class="back" onclick="goHome()">‹ 홈</button><h1>사진</h1>
+  <p class="small">사진 추가를 눌러 냠과 넺의 사진을 골라 봐.</p>
+  <input type="file" id="photoInput" accept="image/*" multiple onchange="addPhotos(event)">
+  <div class="photoGrid" id="photoGrid" style="margin-top:15px"></div>
+</section>
+</div>
+
+<script>
+const PIN='1234';
+let typed='',chatType='messages';
+const starter={
+ messages:[{who:'theirs',text:'오늘은 잘 지냈어요?'},{who:'mine',text:'언니 생각이 조금 났어요.'},{who:'theirs',text:'조금만요?'},{who:'mine',text:'많이요.'}],
+ kakao:[{who:'theirs',text:'언니, 아직 안 자요?'},{who:'mine',text:'응. 왜요?'},{who:'theirs',text:'그냥 목소리 듣고 싶어서요.'}]
+};
+function load(key,fallback){try{return JSON.parse(localStorage.getItem('nn-'+key))??fallback}catch{return fallback}}
+function store(key,value){try{localStorage.setItem('nn-'+key,JSON.stringify(value))}catch{alert('저장 공간이 부족해. 오래된 기록을 정리해 줘.')}}
+let chats=load('chats',starter);
+let contacts=load('contacts',[{name:'냠',number:'010-0000-0000'},{name:'넺',number:'010-1111-1111'}]);
+let notes=load('notes',[]);
+let calls=load('calls',[]);
+function updateTime(){
+ const d=new Date(),t=d.toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit',hour12:false});
+ clock.textContent=t;homeClock.textContent=t;statusTime.textContent=t;
+ date.textContent=d.toLocaleDateString('ko-KR',{month:'long',day:'numeric',weekday:'long'});
+ homeDate.textContent=d.toLocaleDateString('ko-KR',{month:'long',day:'numeric',weekday:'long'});
+}
+updateTime();setInterval(updateTime,30000);
+function digit(n){
+ if(typed.length>=4)return;typed+=n;
+ dots.textContent=[0,1,2,3].map(i=>i<typed.length?'●':'○').join(' ');
+ if(typed.length===4){
+  if(typed===PIN){lock.classList.add('hide');home.classList.remove('hide');error.textContent='';}
+  else{error.textContent='암호가 맞지 않아. 다시 입력해 줘.';setTimeout(()=>{typed='';dots.textContent='○ ○ ○ ○';error.textContent=''},800)}
+ }
+}
+function erase(){typed=typed.slice(0,-1);dots.textContent=[0,1,2,3].map(i=>i<typed.length?'●':'○').join(' ')}
+function openApp(id){
+ document.querySelectorAll('.phone>section').forEach(s=>{if(s.id!=='lock')s.classList.add('hide')});
+ document.getElementById(id).classList.remove('hide');
+}
+function goHome(){openApp('home')}
+function openChat(type){
+ chatType=type;openApp('chat');
+ chatTitle.textContent=type==='kakao'?'냠':'넺';renderChat();
+}
+function renderChat(){
+ chatlog.innerHTML='';
+ chats[chatType].forEach(m=>{
+  const b=document.createElement('div');b.className='bubble '+m.who;b.textContent=m.text;chatlog.appendChild(b);
+ });
+ chatlog.scrollTop=chatlog.scrollHeight;
+}
+function sendMessage(){
+ const value=chatInput.value.trim();if(!value)return;
+ chats[chatType].push({who:'mine',text:value});store('chats',chats);chatInput.value='';renderChat();
+}
+chatInput.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();sendMessage()}});
+function addCall(){
+ const number=dial.value.trim()||'냠';
+ calls.unshift(number+' · '+new Date().toLocaleString('ko-KR'));
+ store('calls',calls);renderCalls();dial.value='';
+}
+function renderCalls(){callsBox();function callsBox(){callsEl.innerHTML='';calls.forEach(c=>{const p=document.createElement('p');p.textContent=c;callsEl.appendChild(p)})}}
+const callsEl=document.getElementById('calls');renderCalls();
+function renderContacts(){
+ contactList.innerHTML='';
+ contacts.forEach(c=>{
+  const card=document.createElement('div');card.className='card';
+  const b=document.createElement('b');b.textContent=c.name;
+  const p=document.createElement('p');p.textContent=c.number||'번호 없음';
+  card.append(b,p);contactList.appendChild(card);
+ });
+}
+function addContact(){
+ const name=newName.value.trim(),number=newNumber.value.trim();if(!name)return;
+ contacts.push({name,number});store('contacts',contacts);renderContacts();newName.value='';newNumber.value='';
+}
+renderContacts();
+function renderNotes(){
+ savedNotes.innerHTML='';
+ notes.forEach((n,i)=>{
+  const c=document.createElement('div');c.className='card';
+  const b=document.createElement('b');b.textContent=n.title;
+  const p=document.createElement('p');p.textContent=n.body;
+  const del=document.createElement('button');del.className='back';del.textContent='삭제';
+  del.onclick=()=>{notes.splice(i,1);store('notes',notes);renderNotes()};
+  c.append(b,p,del);savedNotes.appendChild(c);
+ });
+}
+function saveNote(){
+ const title=noteTitle.value.trim()||'제목 없는 메모',body=noteBody.value.trim();if(!body)return;
+ notes.unshift({title,body});store('notes',notes);renderNotes();noteTitle.value='';noteBody.value='';
+}
+renderNotes();
+function addPhotos(e){
+ Array.from(e.target.files).forEach(file=>{
+  if(!file.type.startsWith('image/'))return;
+  const url=URL.createObjectURL(file),img=document.createElement('img');
+  img.src=url;img.alt=file.name;photoGrid.appendChild(img);
+ });
+}
+</script>
+</body>
+</html>
